@@ -66,13 +66,16 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @Disabled
 public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
 
+
+    // Port S0 = Left, Port S1 = Right
+
     /* Declare OpMode members. */
     HardwarePushbot         robot   = new HardwarePushbot();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
-    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
+    static final double     WHEEL_DIAMETER_INCHES   = 3.8 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.6;
@@ -84,6 +87,9 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
         /*
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
+         *
+         *
+         * FIND INIT METHOD TO CHECK
          */
         robot.init(hardwareMap);
 
@@ -112,8 +118,8 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
         encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
         encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
-        robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
-        robot.rightClaw.setPosition(0.0);
+      //  robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
+      //  robot.rightClaw.setPosition(0.0);
         sleep(1000);     // pause for servos to move
 
         telemetry.addData("Path", "Complete");
@@ -181,4 +187,131 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
             //  sleep(250);   // optional pause after each move
         }
     }
+
+    public void SpecialPattern(){
+        encoderDrive(DRIVE_SPEED, 12, 12, 1 );
+        Turn90("R", .5);
+        encoderDrive(DRIVE_SPEED, 36, 36, 1);
+        Turn90("L", .5);
+        encoderDrive(DRIVE_SPEED, 12, 12, 1 );
+        Turn90("L", .5);
+        encoderDrive(DRIVE_SPEED, 12, 12, 1 );
+        Turn90("L", .5);
+        encoderDrive(DRIVE_SPEED, 36, 36, 1);
+        Turn90("L", .5);
+        encoderDrive(DRIVE_SPEED, 60, 60, 1);
+        Turn90("L", .5);
+        encoderDrive(DRIVE_SPEED, 60, 60, 1);
+    }
+
+    public void SpecialPattern2(){
+
+    }
+
+
+    private void Turn90(String direction, double TM){
+        direction = clamp(direction);
+        if(direction.equals("Right") || direction.equals("R")){
+            encoderDrive(TURN_SPEED, 12, -12, TM);
+
+        }else if(direction.equals("Left") || direction.equals("L")){
+            encoderDrive(TURN_SPEED, -12, 12, TM);
+        }
+
+    }
+
+    private void TurnAcute(String direction, double TM){
+        direction = clamp(direction);
+        if(direction.equals("Right") || direction.equals("R")){
+            encoderDrive(TURN_SPEED, 2, -2, TM);
+
+        }else if(direction.equals("Left") || direction.equals("L")){
+            encoderDrive(TURN_SPEED, -2, 2, TM);
+        }
+    }
+
+    public String clamp(String direction){
+        if((!direction.equals("Right") && !direction.equals("R")) && (!direction.equals("Left") && direction.equals("L")))
+            direction = "R";
+
+        return direction;
+    }
+
+    public void ChaChaSlide(){
+        /*
+        STEPS OF CHA CHA SIDE
+
+
+
+
+         */
+    }
+
+    public void Stomp(String direction){
+        direction = clamp(direction);
+        if(direction.equals("Right") || direction.equals("R")){
+            encoderDrive(DRIVE_SPEED, 1, -1, .5);
+            encoderDrive(DRIVE_SPEED, -1, 1, .5);
+
+        }else if(direction.equals("Left") || direction.equals("L")){
+            encoderDrive(DRIVE_SPEED, -1, 1, .5);
+            encoderDrive(DRIVE_SPEED, 1, -1, .5);
+
+        }
+    }
+
+    public void To_The(String direction){
+        direction = clamp(direction);
+        if(direction.equals("Right") || direction.equals("R")){
+            Turn90("R", .5);
+            encoderDrive(DRIVE_SPEED, 2, 2, .5);
+            Turn90("L", .5);
+
+        }else if(direction.equals("Left") || direction.equals("L")){
+            Turn90("L", .5);
+            encoderDrive(DRIVE_SPEED, 2, 2, .5);
+            Turn90("R", .5);
+
+        }else if(direction.equals("Back") || direction.equals("B")){
+            encoderDrive(DRIVE_SPEED, -3, -3, .5);
+        }
+    }
+
+    public void ChaCha(){
+        // will need timing TBD
+        encoderDrive(DRIVE_SPEED, -4, -4, 0.5);
+        encoderDrive(DRIVE_SPEED, 4, 4, 0.5);
+        encoderDrive(TURN_SPEED, 0.5, -0.5, 0.5);
+        encoderDrive(TURN_SPEED, -1, 1, 0.5);
+        encoderDrive(TURN_SPEED, .5, -.5, .5);
+
+    }
+
+    public void Reverse(){
+        for(int i =0; i<3; i++)
+            Turn90("R", .5);
+
+        for(int i=0; i<0; i++)
+            Turn90("L", .5);
+
+    }
+
+    public void CrissCross(){
+        for(int i = 0; i<5; i++){
+            TurnAcute("R", 0.25);
+            TurnAcute("L", 0.25);
+        }
+    }
+
+    public void TurnItOut(){
+
+        Turn90("L", 1);
+    }
+
+
+
+
+
+
+
 }
