@@ -51,7 +51,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="Basic: Iterative OpMode", group="Iterative Opmode")
-@Disabled
+//@Disabled
 public class BasicOpMode_Iterative extends OpMode
 {
     // Declare OpMode members.
@@ -84,9 +84,9 @@ public class BasicOpMode_Iterative extends OpMode
     /*
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
      */
-    /*@Override
+    @Override
     public void init_loop() {
-    }*/
+    }
 
     /*
      * Code to run ONCE when the driver hits PLAY
